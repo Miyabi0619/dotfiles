@@ -1,0 +1,53 @@
+#!/bin/sh
+
+# Exit on error
+set -e
+
+# Function to check if a command exists
+command_exists() {
+  command -v "$1" >/dev/null 2>&1
+}
+
+{{ if eq .chezmoi.os "linux" -}}
+### For Linux (Debian/Ubuntu) ###
+
+# --- APT Packages ---
+if command_exists apt-get; then
+  echo "INFO: Updating apt repository..."
+  sudo apt-get update
+
+  echo "INFO: Installing apt packages from packages/apt.txt..."
+  # Read packages from apt.txt, ignore comments/empty lines, and install
+  grep -vE '^\s*(#|$)' {{ joinPath .chezmoi.sourceDir "packages/apt.txt" | quote }} | xargs -r sudo apt-get install -y
+else
+  echo "WARN: apt-get command not found. Skipping apt packages."
+fi
+
+# --- Snap Packages ---
+if command_exists snap; then
+  echo "INFO: Installing snap packages from packages/snap.txt..."
+  # Read packages from snap.txt, ignore comments/empty lines, and install
+  grep -vE '^\s*(#|$)' {{ joinPath .chezmoi.sourceDir "packages/snap.txt" | quote }} | xargs -r -n 1 sudo snap install
+else
+  echo "WARN: snap command not found. Skipping snap packages."
+fi
+
+{{ else if eq .chezmoi.os "darwin" -}}
+### For macOS ###
+echo "INFO: macOS detected. Homebrew logic would run here."
+# if command_exists brew; then
+#   echo "INFO: Installing Homebrew packages..."
+#   # Example: brew bundle --file={{ joinPath .chezmoi.sourceDir "packages/Brewfile" | quote }}
+# else
+#   echo "WARN: brew command not found."
+# fi
+
+{{ else if eq .chezmoi.os "windows" -}}
+### For Windows ###
+echo "INFO: Windows detected. Winget logic would be in a .ps1.tmpl script."
+
+{{ else }}
+echo "WARN: Unsupported OS: {{ .chezmoi.os }}"
+{{ end }}
+
+echo "INFO: Package installation script finished."

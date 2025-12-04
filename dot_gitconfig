@@ -1,0 +1,9 @@
+[credential]
+	helper = store
+[user]
+	email = c1406241@st.kanazawa-it.ac.jp
+	name = Miyabi0619
+[http]
+	proxy = 
+[https]
+	proxy = 

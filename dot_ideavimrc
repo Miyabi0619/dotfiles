@@ -1,0 +1,77 @@
+" Basic vim configuration
+
+" 基本設定
+" set relativenumber              " 行番号を表示
+set relativenumber      " 相対行番号を表示
+set cursorline          " カーソル行をハイライト
+set showmatch           " 対応する括弧をハイライト
+set wildmenu            " コマンドライン補完を強化
+set laststatus=2        " ステータスラインを常に表示
+set clipboard=unnamed
+
+" インデント設定
+set expandtab           " タブをスペースに変換
+set tabstop=4           " タブの幅
+set shiftwidth=4        " インデントの幅
+set autoindent          " 自動インデント
+set smartindent         " スマートインデント
+
+" 検索設定
+set ignorecase          " 大文字小文字を無視
+set smartcase           " 大文字が含まれている場合は区別
+set incsearch           " インクリメンタル検索
+set hlsearch            " 検索結果をハイライト
+
+" 表示設定
+set wrap                " 長い行を折り返し
+set linebreak           " 単語の境界で折り返し
+set scrolloff=8         " スクロール時の余白
+set sidescrolloff=8     " 横スクロール時の余白
+
+" ファイル設定
+set encoding=utf-8      " 文字エンコーディング
+set fileencoding=utf-8  " 保存時の文字エンコーディング
+set backup              " バックアップファイルを作成
+set backupdir=~/.vim/backup// " バックアップディレクトリ
+set swapfile            " スワップファイルを作成
+set directory=~/.vim/swap//   " スワップファイルディレクトリ
+set undofile            " アンドゥファイルを作成
+set undodir=~/.vim/undo//     " アンドゥファイルディレクトリ
+
+" ディレクトリを作成
+if !isdirectory($HOME."/.vim/backup")
+    call mkdir($HOME."/.vim/backup", "p")
+endif
+if !isdirectory($HOME."/.vim/swap")
+    call mkdir($HOME."/.vim/swap", "p")
+endif
+if !isdirectory($HOME."/.vim/undo")
+    call mkdir($HOME."/.vim/undo", "p")
+endif
+
+" キーマッピング
+" ESCでハイライトを消去する、より安全なマッピング
+let mapleader = ' '
+nnoremap <silent> <leader>c :nohlsearch<CR>
+" Ctrl+hで画面分割の移動
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+" Linux固有の設定
+set term=xterm-256color
+
+" ファイルタイプ別設定
+autocmd FileType python setlocal tabstop=4 shiftwidth=4 expandtab
+autocmd FileType javascript setlocal tabstop=2 shiftwidth=2 expandtab
+autocmd FileType html setlocal tabstop=2 shiftwidth=2 expandtab
+autocmd FileType css setlocal tabstop=2 shiftwidth=2 expandtab
+autocmd FileType yaml setlocal tabstop=2 shiftwidth=2 expandtab
+autocmd FileType json setlocal tabstop=2 shiftwidth=2 expandtab
+
+" 色設定
+syntax enable           " シンタックスハイライトを有効
+colorscheme default     " デフォルトカラースキーム
+
+" ステータスライン設定
+set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [POS=%l,%v][%p%%]\ %{strftime(\"%d/%m/%y\ -\ %H:%M\")}
