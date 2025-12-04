@@ -1,0 +1,83 @@
+# `sheldon` configuration file
+# ----------------------------
+#
+# You can modify this file directly or you can use one of the following
+# `sheldon` commands which are provided to assist in editing the config file:
+#
+# - `sheldon add` to add a new plugin to the config file
+# - `sheldon edit` to open up the config file in the default editor
+# - `sheldon remove` to remove a plugin from the config file
+#
+# See the documentation for more https://github.com/rossmacarthur/sheldon#readme
+
+shell = "zsh"
+
+[templates]
+defer = "{% for file in files %}zsh-defer source {{ `\"{{ file }}\"` }}\n{% endfor %}"
+
+[plugins]
+
+[plugins.zsh-defer]
+github = "romkatv/zsh-defer"
+
+[plugins.zsh-autosuggestions]
+github = "zsh-users/zsh-autosuggestions"
+apply = ["defer"]
+
+[plugins.zsh-syntax-highlighting]
+github = "zsh-users/zsh-syntax-highlighting"
+
+[plugins.zsh-autocomplete]
+github = "marlonrichert/zsh-autocomplete"
+
+[plugins.zsh-completions]
+github = "zsh-users/zsh-completions"
+apply = ["defer"]
+
+[plugins.zsh-history-substring-search]
+github = "zsh-users/zsh-history-substring-search"
+apply = ["defer"]
+
+[plugins.zsh-replace-multiple-dots]
+github = "momo-lab/zsh-replace-multiple-dots"
+apply = ["defer"]
+
+[plugins.starship]
+inline = 'eval "$(starship init zsh)"'
+
+[plugins.mise]
+inline = '''
+eval "$(mise activate zsh)"
+path=(
+  ${HOME}/.local/share/mise/shims(N-/)
+  $path
+)
+'''
+
+[plugins.compinit]
+inline = """
+autoload -Uz compinit
+zsh-defer -a -t0.01 compinit -d "$XDG_STATE_HOME/zsh/zcompdump"
+"""
+
+[plugins.local-plugins]
+local = "~/.config/zsh/plugins/"
+apply = ["defer"]
+
+[plugins.local-zsh-completions]
+local = "~/.config/zsh/site-functions/"
+apply = ["defer", "fpath"]
+
+[plugins.homebrew]
+{{ if eq .chezmoi.os "darwin" -}}
+inline = 'eval "$(/opt/homebrew/bin/brew shellenv)"'
+{{ else if eq .chezmoi.os "linux" -}}
+inline = 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"'
+{{ end -}}
+
+{{ if eq .chezmoi.os "darwin" -}}
+[plugins.orbstack]
+local = "~/.orbstack/shell/"
+use = ["init.zsh"]
+apply = ["defer"]
+{{ end -}}

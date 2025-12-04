@@ -262,3 +262,6 @@ xdg-utils
 yubikey-manager
 zip
 zoom
+gh
+zsh
+sheldon
