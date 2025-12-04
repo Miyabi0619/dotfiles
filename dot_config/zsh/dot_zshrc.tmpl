@@ -54,7 +54,63 @@ source "$sheldon_cache"
 # 使い終わった変数を削除
 unset cache_dir sheldon_cache sheldon_toml
 {{ else if eq .chezmoi.os "darwin" -}}
-# --- macOS Zshrc Config (TODO: Add specific settings for macOS) ---
+# --- macOS Zshrc Config ---
 
-# (Add macOS specific settings here)
+# --- Homebrew を最初に読み込む（Apple Silicon / Intel 両対応） ---
+if [ -x /opt/homebrew/bin/brew ]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [ -x /usr/local/bin/brew ]; then
+  eval "$(/usr/local/bin/brew shellenv)"
+fi
+
+# --- history ---
+HISTSIZE=10000
+SAVEHIST=10000
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_SAVE_NO_DUPS
+setopt SHARE_HISTORY
+
+# --- sheldon (plugin manager) ---
+cache_dir=${XDG_CACHE_HOME:-$HOME/.cache}
+sheldon_cache="$cache_dir/sheldon.zsh"
+sheldon_toml="$HOME/.config/sheldon/plugins.toml"
+# キャッシュがない、またはキャッシュが古い場合にキャッシュを作成
+if [[ ! -r "$sheldon_cache" || "$sheldon_toml" -nt "$sheldon_cache" ]]; then
+  mkdir -p $cache_dir
+  sheldon source > $sheldon_cache
+fi
+source "$sheldon_cache"
+unset cache_dir sheldon_cache sheldon_toml
+
+# --- 開発環境設定を読み込み ---
+[ -f ~/.env_dev ] && source ~/.env_dev
+
+# --- 追加のPATH設定 ---
+export LDFLAGS="-L/opt/homebrew/opt/tcl-tk/lib"
+export CPPFLAGS="-I/opt/homebrew/opt/tcl-tk/include"
+export PATH="/opt/homebrew/opt/tcl-tk/bin:$PATH"
+
+# --- エイリアス ---
+alias python='python3'
+alias ll='ls -la'
+alias la='ls -A'
+alias l='ls -CF'
+
+# --- 補完設定 ---
+autoload -Uz compinit
+compinit
+
+# --- Cargo環境変数（Rustがインストールされている場合） ---
+[ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
+
+# --- LM Studio CLI ---
+export PATH="$PATH:$HOME/.lmstudio/bin"
+
+# --- Proxy設定 ---
+alias proxyon='export http_proxy="http://wwwproxy.kanazawa-it.ac.jp:8080"; export https_proxy="http://wwwproxy.kanazawa-it.ac.jp:8080"; echo "Proxy has been set."'
+alias proxyoff='unset http_proxy; unset https_proxy; echo "Proxy has been unset."'
+
+# --- Antigravity ---
+[ -d "$HOME/.antigravity/antigravity/bin" ] && export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
 {{- end }}
