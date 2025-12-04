@@ -34,13 +34,23 @@ fi
 
 {{ else if eq .chezmoi.os "darwin" -}}
 ### For macOS ###
-echo "INFO: macOS detected. Homebrew logic would run here."
-# if command_exists brew; then
-#   echo "INFO: Installing Homebrew packages..."
-#   # Example: brew bundle --file={{ joinPath .chezmoi.sourceDir "packages/Brewfile" | quote }}
-# else
-#   echo "WARN: brew command not found."
-# fi
+
+# --- Homebrew ---
+if command_exists brew; then
+  echo "INFO: Installing Homebrew packages from packages/Brewfile..."
+  brew bundle --file={{ joinPath .chezmoi.sourceDir "packages/Brewfile" | quote }}
+else
+  echo "WARN: brew command not found. Installing Homebrew first..."
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  
+  # Add Homebrew to PATH for Apple Silicon Macs
+  if [ -f "/opt/homebrew/bin/brew" ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  fi
+  
+  echo "INFO: Installing Homebrew packages from packages/Brewfile..."
+  brew bundle --file={{ joinPath .chezmoi.sourceDir "packages/Brewfile" | quote }}
+fi
 
 {{ else if eq .chezmoi.os "windows" -}}
 ### For Windows ###
