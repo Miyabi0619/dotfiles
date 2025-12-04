@@ -1,0 +1,21 @@
+{{- if eq .chezmoi.os "windows" -}}
+# winget packages hash: {{ include "packages/winget.json" | sha256sum }}
+
+# Install winget packages from packages/winget.json
+Write-Host "INFO: Installing winget packages from packages/winget.json..."
+
+$wingetJsonPath = Join-Path "{{ .chezmoi.sourceDir }}" "packages/winget.json"
+
+if (Test-Path $wingetJsonPath) {
+    # Use winget import to install packages
+    winget import -i $wingetJsonPath --accept-package-agreements --accept-source-agreements --ignore-unavailable
+    
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "INFO: winget packages installed successfully."
+    } else {
+        Write-Host "WARN: Some winget packages may have failed to install. Exit code: $LASTEXITCODE"
+    }
+} else {
+    Write-Host "WARN: winget.json not found at $wingetJsonPath"
+}
+{{- end }}
