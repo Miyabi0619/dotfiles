@@ -1,0 +1,6 @@
+export PATH=$PATH:/Users/soraha/Library/Android/sdk/platform-tools
+. "$HOME/.cargo/env"
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/soraha/.lmstudio/bin"
+# End of LM Studio CLI section
