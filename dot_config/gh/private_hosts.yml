@@ -1,4 +1,5 @@
 github.com:
-    user: Miyabi0619
-    oauth_token: ***REMOVED***
     git_protocol: https
+    users:
+        Miyabi0619:
+    user: Miyabi0619

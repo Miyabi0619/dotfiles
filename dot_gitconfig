@@ -1,9 +1,36 @@
-[credential]
-	helper = store
 [user]
-	email = c1406241@st.kanazawa-it.ac.jp
 	name = Miyabi0619
-[http]
-	proxy = 
-[https]
-	proxy = 
+	email = c1406241@st.kanazawa-it.ac.jp
+	ame = Miyabi0619
+
+[init]
+	defaultBranch = main
+
+[core]
+	editor = code --wait
+	autocrlf = input
+
+[pull]
+	rebase = false
+
+[push]
+	default = simple
+
+[alias]
+	st = status
+	au = add -u
+	br = branch
+	cb = "!f(){ git branch $1 origin/$1;};f"
+	dfl = diff --name-only
+	co = commit
+	co-a = !git add . && git commit
+	unstage = reset HEAD
+	ch = checkout
+	chb = checkout -b
+	gr = log --graph --date=short --decorate=short --pretty = format:'%Cgreen%h %Creset%cd %Cblue%cn %Cred%d %Creset%s'
+	proxyOn = !git config --global http.proxy http://wwwproxy.kanazawa-it.ac.jp:8080 && git config --global https.proxy https://wwwproxy.kanazawa-it.ac.jp:8080
+	proxyOff = !git config --global --unset http.proxy && git config --global --unset https.proxy
+	rmIgnore = !git rm -r --cached . && git add . && commit -m ".gitignoreに指定されているファイルの追跡を解除した。"
+[credential]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
