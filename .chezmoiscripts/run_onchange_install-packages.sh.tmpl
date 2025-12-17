@@ -34,22 +34,23 @@ fi
 
 {{ else if eq .chezmoi.os "darwin" -}}
 ### For macOS ###
+# Brewfile hash: {{ include "dot_Brewfile" | sha256sum }}
 
 # --- Homebrew ---
 if command_exists brew; then
-  echo "INFO: Installing Homebrew packages from packages/Brewfile..."
-  brew bundle --file={{ joinPath .chezmoi.sourceDir "packages/Brewfile" | quote }}
+  echo "INFO: Installing Homebrew packages from ~/.Brewfile..."
+  brew bundle --file="${HOME}/.Brewfile"
 else
   echo "WARN: brew command not found. Installing Homebrew first..."
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-  
+
   # Add Homebrew to PATH for Apple Silicon Macs
   if [ -f "/opt/homebrew/bin/brew" ]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
   fi
-  
-  echo "INFO: Installing Homebrew packages from packages/Brewfile..."
-  brew bundle --file={{ joinPath .chezmoi.sourceDir "packages/Brewfile" | quote }}
+
+  echo "INFO: Installing Homebrew packages from ~/.Brewfile..."
+  brew bundle --file="${HOME}/.Brewfile"
 fi
 
 {{ else if eq .chezmoi.os "windows" -}}

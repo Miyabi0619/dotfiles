@@ -1,0 +1,26 @@
+# macOS専用ファイル - Linux/Windowsでは無視
+{{ if ne .chezmoi.os "darwin" }}
+.Brewfile
+.Brewfile_macos
+.zshrc
+.zprofile
+.bash_profile
+.config/zsh/
+.config/sheldon/
+.config/starship.toml
+Library/
+{{ end }}
+
+# Linux専用ファイル - macOS/Windowsでは無視
+{{ if ne .chezmoi.os "linux" }}
+# 将来Linux専用ファイルを追加する場合はここに
+{{ end }}
+
+# Windows専用ファイル - macOS/Linuxでは無視
+{{ if ne .chezmoi.os "windows" }}
+# 将来Windows専用ファイルを追加する場合はここに
+{{ end }}
+
+# 共通で無視するファイル
+README.md
+.github/
