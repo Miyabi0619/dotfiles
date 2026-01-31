@@ -32,6 +32,18 @@ else
   echo "WARN: snap command not found. Skipping snap packages."
 fi
 
+# --- Cargo Packages (sheldon, starship) ---
+if command_exists cargo; then
+  echo "INFO: Installing cargo packages (sheldon, starship)..."
+  cargo install sheldon starship
+else
+  echo "WARN: cargo command not found. Installing Rust first..."
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+  . "$HOME/.cargo/env"
+  echo "INFO: Installing cargo packages (sheldon, starship)..."
+  cargo install sheldon starship
+fi
+
 {{ else if eq .chezmoi.os "darwin" -}}
 ### For macOS ###
 # Brewfile hash: {{ include "dot_Brewfile" | sha256sum }}

@@ -45,15 +45,6 @@ apply = ["defer"]
 [plugins.starship]
 inline = 'eval "$(starship init zsh)"'
 
-[plugins.mise]
-inline = '''
-eval "$(mise activate zsh)"
-path=(
-  ${HOME}/.local/share/mise/shims(N-/)
-  $path
-)
-'''
-
 [plugins.compinit]
 inline = """
 autoload -Uz compinit

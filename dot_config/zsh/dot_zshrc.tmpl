@@ -113,4 +113,7 @@ alias proxyoff='unset http_proxy; unset https_proxy; echo "Proxy has been unset.
 
 # --- Antigravity ---
 [ -d "$HOME/.antigravity/antigravity/bin" ] && export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
+
+# --- JetBrains Toolbox ---
+[ -d "$HOME/Library/Application Support/JetBrains/Toolbox/scripts" ] && export PATH="$PATH:$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
 {{- end }}

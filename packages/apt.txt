@@ -264,4 +264,3 @@ zip
 zoom
 gh
 zsh
-sheldon
