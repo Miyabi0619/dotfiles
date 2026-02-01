@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "kotlin-lsp": {
+      "command": "/opt/homebrew/bin/kotlin-language-server",
+      "args": []
+    }
+  }
+}
