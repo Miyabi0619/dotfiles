@@ -91,18 +91,12 @@ unset cache_dir sheldon_cache sheldon_toml
 # --- 開発環境設定を読み込み ---
 [ -f ~/.env_dev ] && source ~/.env_dev
 
-# --- mise ---
-if command -v mise >/dev/null 2>&1; then
-  eval "$(mise activate zsh)"
-fi
-
 # --- 追加のPATH設定 ---
 export LDFLAGS="-L/opt/homebrew/opt/tcl-tk/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/tcl-tk/include"
 export PATH="/opt/homebrew/opt/tcl-tk/bin:$PATH"
 
 # --- エイリアス ---
-alias python='python3'
 alias ll='ls -la'
 alias la='ls -A'
 alias l='ls -CF'
@@ -126,4 +120,9 @@ alias proxyoff='unset http_proxy; unset https_proxy; echo "Proxy has been unset.
 
 # --- JetBrains Toolbox ---
 [ -d "$HOME/Library/Application Support/JetBrains/Toolbox/scripts" ] && export PATH="$PATH:$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
+
+# --- mise ---
+if command -v mise >/dev/null 2>&1; then
+  eval "$(mise activate zsh)"
+fi
 {{- end }}
