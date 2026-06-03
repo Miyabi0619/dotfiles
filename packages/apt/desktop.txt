@@ -1,0 +1,11 @@
+fcitx5
+fcitx5-mozc
+flatpak
+fonts-firacode
+fonts-hack
+fonts-ipaexfont
+fonts-mplus
+fonts-noto
+fonts-noto-cjk
+gnome-keyring
+pavucontrol

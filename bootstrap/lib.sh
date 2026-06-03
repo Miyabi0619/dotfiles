@@ -24,6 +24,12 @@ install_nix_hint() {
 }
 
 home_manager_profile() {
+  host="$(hostname | tr '[:upper:]' '[:lower:]' | sed 's/\.local$//' | tr -c 'a-z0-9-' '-' | sed 's/-$//')"
+  if grep -q "\"${host}\"" ./nix/flake.nix; then
+    printf '%s\n' "${host}"
+    return 0
+  fi
+
   case "$(uname -s)" in
     Darwin)
       printf '%s-darwin\n' "${USER}"

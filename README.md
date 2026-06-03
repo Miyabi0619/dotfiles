@@ -27,19 +27,31 @@ make bootstrap-windows
 
 各 bootstrap は OS ガードを持っています。例えば Ubuntu 用スクリプトは macOS や WSL では止まります。
 
-既存の `dot_Brewfile` と `packages/winget.json` はまだ未分類のため、デフォルトでは一括インストールしません。
-OS 管理に残すパッケージへ整理したあと、必要な場合だけ `RUN_BREW_BUNDLE=1 make bootstrap-macos` または `RUN_WINGET_IMPORT=1 make bootstrap-windows` を使います。
+既存の `dot_Brewfile`、`packages/apt.txt`、`packages/winget.json` は棚卸しの履歴として残していますが、デフォルトでは一括インストールしません。
+macOS の GUI アプリと VS Code 拡張だけ入れる場合は `RUN_BREW_BUNDLE=1 make bootstrap-macos`、Windows の winget import を使う場合は `RUN_WINGET_IMPORT=1 make bootstrap-windows` を使います。
 
 ## 通常運用
 
 ```sh
 make nix-switch
+make nix-lock
 make chezmoi-dry
 make chezmoi-apply
 make mise-install
 ```
 
 `chezmoi-dry` で差分を確認してから `chezmoi-apply` を実行します。
+
+## Mac adoption
+
+この Mac は `sorahas-gram` profile で管理します。
+
+最初は安全な範囲だけを chezmoi 管理にします。
+
+- manage: `.zshenv`, `.config/zsh/`, `.config/mise/`, `.config/sheldon/`, `.config/starship.toml`, `.gitconfig`
+- do not manage yet: `.bash_profile`, `.bashrc`, `.profile`, `~/.Brewfile`, `~/Library/Application Support/Code/User/settings.json`
+
+VS Code settings や app-specific settings は変更頻度が高いため、必要になったら明示的に再採用します。
 
 ## ディレクトリ
 
@@ -48,7 +60,7 @@ make mise-install
 ├── bootstrap/          # 明示実行する OS 別 bootstrap
 ├── nix/                # Nix flake と Home Manager 設定
 │   └── home/
-├── packages/           # OS 標準パッケージ管理用の一覧
+├── packages/           # OS 標準パッケージ管理用の分類済み一覧
 ├── dot_config/         # chezmoi が配置する XDG 設定
 ├── dot_gitconfig
 ├── dot_Brewfile        # macOS の Homebrew 管理対象
@@ -67,3 +79,20 @@ make mise-install
 | ROS2 / Docker / ドライバ | OS 標準 |
 
 同じソフトを複数の管理ツールで入れないことを優先します。
+
+## Home Manager profiles
+
+`make nix-switch` はまず hostname 由来の profile を探し、なければ `${USER}-darwin` または `${USER}-linux` にフォールバックします。
+
+明示したい場合は次のように指定します。
+
+```sh
+HM_PROFILE=sorahas-gram make nix-switch
+HM_PROFILE=yuni-linux make nix-switch
+```
+
+`nix/flake.lock` は Nix 導入後に生成してコミットします。
+
+```sh
+make nix-lock
+```

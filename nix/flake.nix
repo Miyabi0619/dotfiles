@@ -25,6 +25,13 @@
     in
     {
       homeConfigurations = {
+        "sorahas-gram" = mkHome {
+          system = "aarch64-darwin";
+          username = "soraha";
+          homeDirectory = "/Users/soraha";
+          modules = [ ./home/darwin.nix ];
+        };
+
         "soraha-darwin" = mkHome {
           system = "aarch64-darwin";
           username = "soraha";

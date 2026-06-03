@@ -1,6 +1,6 @@
 SHELL := /bin/sh
 
-.PHONY: bootstrap-ubuntu bootstrap-macos bootstrap-wsl bootstrap-windows chezmoi-dry chezmoi-apply mise-install nix-switch nix-check
+.PHONY: bootstrap-ubuntu bootstrap-macos bootstrap-wsl bootstrap-windows chezmoi-dry chezmoi-apply mise-install nix-lock nix-switch nix-check
 
 bootstrap-ubuntu:
 	./bootstrap/ubuntu.sh
@@ -24,8 +24,14 @@ mise-install:
 	mise install
 
 nix-switch:
-	@if [ "$$(uname -s)" = "Darwin" ]; then profile="$${HM_PROFILE:-$${USER}-darwin}"; else profile="$${HM_PROFILE:-$${USER}-linux}"; fi; \
+	@host="$$(hostname | tr '[:upper:]' '[:lower:]' | sed 's/\.local$$//' | tr -c 'a-z0-9-' '-' | sed 's/-$$//')"; \
+	if [ "$$(uname -s)" = "Darwin" ]; then fallback="$${USER}-darwin"; else fallback="$${USER}-linux"; fi; \
+	profile="$${HM_PROFILE:-$${host}}"; \
+	if ! grep -q "\"$${profile}\"" ./nix/flake.nix; then profile="$${fallback}"; fi; \
 	if command -v home-manager >/dev/null 2>&1; then home-manager switch --flake "./nix#$${profile}"; else nix run github:nix-community/home-manager -- switch --flake "./nix#$${profile}"; fi
+
+nix-lock:
+	cd nix && nix flake lock
 
 nix-check:
 	nix flake check ./nix

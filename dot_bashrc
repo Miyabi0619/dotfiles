@@ -117,18 +117,9 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# Node Version Manager (nvm)
-if [ -d "$HOME/.nvm" ]; then
-    export NVM_DIR="$HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-fi
-
-# Pyenv
-if command -v pyenv &>/dev/null; then
-    export PYENV_ROOT="$HOME/.pyenv"
-    export PATH="$PYENV_ROOT/bin:$PATH"
-    eval "$(pyenv init -)"
+# mise
+if command -v mise >/dev/null 2>&1; then
+    eval "$(mise activate bash)"
 fi
 
 # ROS (Robot Operating System) 設定
@@ -152,44 +143,9 @@ alias cmd='chezmoi diff'
 alias cme='chezmoi edit'
 alias cmu='chezmoi update'
 
-net=$(iwgetid -r)
-if [ "$net" = "KIT-WLAP2" ]; then
-    export http_proxy="http://wwwproxy.kanazawa-it.ac.jp:8080/"
-    export https_proxy="http://wwwproxy.kanazawa-it.ac.jp:8080/"
-    export HTTP_PROXY="http://wwwproxy.kanazawa-it.ac.jp:8080/"
-    export HTTPS_PROXY="http://wwwproxy.kanazawa-it.ac.jp:8080/"
-    git config --global http.proxy "http://wwwproxy.kanazawa-it.ac.jp:8080/"
-    git config --global https.proxy "http://wwwproxy.kanazawa-it.ac.jp:8080/"
-    echo "Changed the proxy settings for kit-env"
-else
-    export http_proxy=""
-    export https_proxy=""
-    export HTTP_PROXY=""
-    export HTTPS_PROXY=""
-    git config --global http.proxy ""
-    git config --global https.proxy ""
-    echo "Cleared the proxy settings"
+if [ -f "$HOME/.config/shell/proxy-kit.sh" ]; then
+    . "$HOME/.config/shell/proxy-kit.sh"
 fi
-
-proxyOn() {
-    export http_proxy="http://wwwproxy.kanazawa-it.ac.jp:8080/"
-    export https_proxy="http://wwwproxy.kanazawa-it.ac.jp:8080/"
-    export HTTP_PROXY="http://wwwproxy.kanazawa-it.ac.jp:8080/"
-    export HTTPS_PROXY="http://wwwproxy.kanazawa-it.ac.jp:8080/"
-    git config --global http.proxy "http://wwwproxy.kanazawa-it.ac.jp:8080/"
-    git config --global https.proxy "http://wwwproxy.kanazawa-it.ac.jp:8080/"
-    echo "Changed proxy to kit-env"
-}
-
-proxyOff() {
-    export http_proxy=""
-    export https_proxy=""
-    export HTTP_PROXY=""
-    export HTTPS_PROXY=""
-    git config --global --unset http.proxy
-    git config --global --unset https.proxy
-    echo "Cleared proxy"
-}
 
 # pip/pipx のスクリプト設置先を PATH に追加
 if [ -d "$HOME/.local/bin" ] && [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then

@@ -16,10 +16,11 @@ if ! command -v brew >/dev/null 2>&1; then
   exit 1
 fi
 
-if [ "${RUN_BREW_BUNDLE:-0}" = "1" ] && [ -f dot_Brewfile ]; then
-  brew bundle --file=dot_Brewfile
+if [ "${RUN_BREW_BUNDLE:-0}" = "1" ]; then
+  brew bundle --file=packages/brew/gui.Brewfile
+  brew bundle --file=packages/brew/vscode.Brewfile
 else
-  echo "Skipping brew bundle. Set RUN_BREW_BUNDLE=1 after pruning dot_Brewfile to OS-owned packages."
+  echo "Skipping brew bundle. Set RUN_BREW_BUNDLE=1 to install OS-owned GUI apps and VS Code extensions."
 fi
 
 if ! command -v nix >/dev/null 2>&1; then

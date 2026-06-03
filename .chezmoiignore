@@ -5,17 +5,25 @@ Makefile
 bootstrap/
 nix/
 packages/
+.Brewfile
+.Brewfile_macos
+.chezmoiscripts/
+
+# High-churn application settings. Use app sync or adopt explicitly later.
+.claude/
+.config/gh/
+.config/starship.toml
+Library/
 
 # macOS専用ファイル - Linux/Windowsでは無視
 {{ if ne .chezmoi.os "darwin" }}
-.Brewfile
-.Brewfile_macos
-Library/
 {{ end }}
 
 # Linux専用ファイル - macOS/Windowsでは無視
 {{ if ne .chezmoi.os "linux" }}
-# 将来Linux専用ファイルを追加する場合はここに
+.bash_profile
+.bashrc
+.profile
 {{ end }}
 
 # Windows専用ファイル - macOS/Linuxでは無視

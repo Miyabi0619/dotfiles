@@ -20,7 +20,7 @@ if grep -qi microsoft /proc/version; then
 fi
 
 sudo apt-get update
-sudo apt-get install -y curl ca-certificates git xz-utils build-essential
+grep -vE '^\s*(#|$)' packages/apt/base.txt | xargs -r sudo apt-get install -y
 
 if ! command -v nix >/dev/null 2>&1; then
   echo "Nix is not installed."

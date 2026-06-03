@@ -1,0 +1,14 @@
+# Manual-only packages. Do not install this file with xargs.
+boot-repair
+efibootmgr
+grub-common
+grub-efi-amd64-bin
+grub-efi-amd64-signed
+grub-pc
+grub-pc-bin
+linux-generic-hwe-22.04
+linux-oem-22.04
+mokutil
+oem-sutton-adair-meta
+os-prober
+shim-signed

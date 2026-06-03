@@ -55,10 +55,6 @@ zsh-defer -a -t0.01 compinit -d "$XDG_STATE_HOME/zsh/zcompdump"
 local = "~/.config/zsh/plugins/"
 apply = ["defer"]
 
-[plugins.local-zsh-completions]
-local = "~/.config/zsh/site-functions/"
-apply = ["defer", "fpath"]
-
 {{ if eq .chezmoi.os "darwin" -}}
 [plugins.homebrew]
 inline = 'eval "$(/opt/homebrew/bin/brew shellenv)"'
