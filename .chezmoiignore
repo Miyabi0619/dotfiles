@@ -1,13 +1,15 @@
+# Source-only files
+README.md
+.github/
+Makefile
+bootstrap/
+nix/
+packages/
+
 # macOS専用ファイル - Linux/Windowsでは無視
 {{ if ne .chezmoi.os "darwin" }}
 .Brewfile
 .Brewfile_macos
-.zshrc
-.zprofile
-.bash_profile
-.config/zsh/
-.config/sheldon/
-.config/starship.toml
 Library/
 {{ end }}
 
@@ -22,5 +24,3 @@ Library/
 {{ end }}
 
 # 共通で無視するファイル
-README.md
-.github/

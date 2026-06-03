@@ -1,144 +1,69 @@
-# macOS Development Environment
+# dotfiles
 
-このリポジトリは、macOSの開発環境をchezmoiで管理するためのdotfilesです。
+このリポジトリは、macOS / Ubuntu / WSL / Windows の環境を分けて管理するための dotfiles です。
 
-## 🚀 新しいmacOSでの環境復旧手順
+## 方針
 
-### 1. Chezmoiのインストール
-```bash
-# Homebrewでchezmoiをインストール
-brew install chezmoi
+| 領域 | 管理者 | 目的 |
+| --- | --- | --- |
+| 共通 CLI | Nix + Home Manager | git, gh, rg, fd, jq, bat, eza, fzf, zoxide, starship, sheldon など |
+| 言語ランタイム | mise | Node.js, Python, Java などのバージョン固定 |
+| dotfiles | chezmoi | shell, git, starship, mise などの設定ファイル配置 |
+| OS / GUI アプリ | apt, Homebrew, winget | Android Studio, VS Code, ブラウザ, ドライバ, ROS2 など |
 
-# または直接インストール
-sh -c "$(curl -fsLS chezmoi.io/get)"
+重要なルールは、chezmoi からパッケージインストールを自動実行しないことです。
+`chezmoi apply` は設定ファイルの配置だけに使い、インストール処理は `make bootstrap-*` で明示的に実行します。
+
+## 初回セットアップ
+
+OS に合わせて、必ず明示的な target を実行します。
+
+```sh
+make bootstrap-macos
+make bootstrap-ubuntu
+make bootstrap-wsl
+make bootstrap-windows
 ```
 
-### 2. Dotfilesのクローン（GitHubに上げている場合）
-```bash
-# GitHubからクローンして初期化（要リポジトリURL設定）
-chezmoi init --apply https://github.com/yourusername/dotfiles.git
+各 bootstrap は OS ガードを持っています。例えば Ubuntu 用スクリプトは macOS や WSL では止まります。
+
+既存の `dot_Brewfile` と `packages/winget.json` はまだ未分類のため、デフォルトでは一括インストールしません。
+OS 管理に残すパッケージへ整理したあと、必要な場合だけ `RUN_BREW_BUNDLE=1 make bootstrap-macos` または `RUN_WINGET_IMPORT=1 make bootstrap-windows` を使います。
+
+## 通常運用
+
+```sh
+make nix-switch
+make chezmoi-dry
+make chezmoi-apply
+make mise-install
 ```
 
-### 3. ローカルでの復旧（バックアップからの場合）
-```bash
-# chezmoiディレクトリをコピーした後
-chezmoi apply
+`chezmoi-dry` で差分を確認してから `chezmoi-apply` を実行します。
+
+## ディレクトリ
+
+```text
+.
+├── bootstrap/          # 明示実行する OS 別 bootstrap
+├── nix/                # Nix flake と Home Manager 設定
+│   └── home/
+├── packages/           # OS 標準パッケージ管理用の一覧
+├── dot_config/         # chezmoi が配置する XDG 設定
+├── dot_gitconfig
+├── dot_Brewfile        # macOS の Homebrew 管理対象
+└── Makefile
 ```
 
-## 📦 管理されているファイル
+## パッケージ所有者
 
-### システム設定
-- **Brewfile** - Homebrew packages & casks
-- **.zshrc** - Zsh shell configuration
-- **.env_dev** - Development environment variables
-- **.gitconfig** - Git configuration
+| ツール | 管理者 |
+| --- | --- |
+| git / gh / ripgrep / fd / jq / bat / eza | Nix |
+| zsh / starship / sheldon / direnv / tmux / neovim | Nix でバイナリ、chezmoi で設定 |
+| Node.js / Python / Java | mise |
+| Gradle | プロジェクトの Gradle Wrapper |
+| Android Studio / VS Code / ブラウザ | OS 標準 |
+| ROS2 / Docker / ドライバ | OS 標準 |
 
-### アプリケーション設定
-- **VS Code settings** - エディタ設定と拡張機能
-- **SSH config** - SSH接続設定（要手動設定）
-
-### 自動実行スクリプト
-- **run_once_install.sh** - 初回セットアップスクリプト
-- **run_once_macos-setup.sh** - macOSシステム設定
-
-## 🔧 含まれるソフトウェア
-
-### 開発ツール
-- Git, Python, Java, Node.js
-- VS Code, Android Studio
-- Docker (OrbStack)
-
-### 生産性ツール  
-- Raycast, Rectangle, Maccy
-- Bitwarden, Notion
-- Starship (プロンプト)
-
-### その他
-- Firefox, Chrome
-- VLC, Thunderbird
-- ゲームエミュレータ各種
-
-## 🔑 手動設定が必要なもの
-
-### SSH設定
-```bash
-# SSH鍵の生成
-ssh-keygen -t ed25519 -C "your.email@example.com"
-
-# SSH agentに追加
-ssh-add ~/.ssh/id_ed25519
-
-# 公開鍵をGitHub/GitLabに追加
-cat ~/.ssh/id_ed25519.pub
-```
-
-### Git設定（既に設定済み）
-```bash
-git config --global user.name "Miyabi0619"
-git config --global user.email "c1406241@st.kanazaawa-it.ac.jp"
-```
-
-## 📝 使用方法
-
-### ファイルの追加
-```bash
-chezmoi add ~/.filename
-```
-
-### 変更の適用
-```bash
-chezmoi apply
-```
-
-### 編集
-```bash
-chezmoi edit ~/.filename
-```
-
-### 状態確認
-```bash
-chezmoi status
-chezmoi diff
-```
-
-## 🔄 定期的なメンテナンス
-
-```bash
-# VS Code拡張機能リストの更新
-code --list-extensions > ~/.local/share/chezmoi/dot_vscode/extensions.txt
-
-# Brewfileの更新
-brew bundle dump --force --file=~/.local/share/chezmoi/Brewfile
-```
-
-## 📂 ディレクトリ構造
-
-```
-~/.local/share/chezmoi/
-├── Brewfile                    # Homebrew packages
-├── dot_zshrc                   # Zsh configuration
-├── dot_env_dev                 # Development environment
-├── dot_gitconfig               # Git settings
-├── private_dot_ssh/            # SSH configuration
-├── dot_vscode/                 # VS Code settings
-├── run_once_install.sh.tmpl    # Setup script
-├── run_once_macos-setup.sh.tmpl # macOS preferences
-└── README.md                   # This file
-```
-
-## 🆘 トラブルシューティング
-
-### 権限エラー
-```bash
-sudo chown -R $(whoami) ~/.local/share/chezmoi
-```
-
-### 設定の競合
-```bash
-chezmoi merge ~/.filename
-```
-
-### 完全リセット
-```bash
-chezmoi apply --force
-```
+同じソフトを複数の管理ツールで入れないことを優先します。

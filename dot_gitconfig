@@ -33,4 +33,4 @@
 	rmIgnore = !git rm -r --cached . && git add . && commit -m ".gitignoreに指定されているファイルの追跡を解除した。"
 [credential]
 	helper = 
-	helper = !/opt/homebrew/bin/gh auth git-credential
+	helper = !gh auth git-credential
