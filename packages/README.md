@@ -16,5 +16,10 @@ Legacy full dumps remain as `apt.txt` and `snap.txt` until they are fully classi
 
 - `brew/gui.Brewfile`: macOS GUI apps and casks
 - `brew/vscode.Brewfile`: VS Code extensions
+- `brew/legacy.Brewfile`: old full Brewfile kept only as migration reference
 
 Nix-owned CLI tools and mise-owned language runtimes should not be added here.
+
+Ghostty is installed as a Homebrew cask. Its active macOS config is managed by
+chezmoi at `~/Library/Application Support/com.mitchellh.ghostty/config` because
+that is the path Ghostty created and reads on this Mac.

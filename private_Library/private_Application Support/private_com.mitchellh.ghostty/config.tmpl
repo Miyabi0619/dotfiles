@@ -1,0 +1,41 @@
+shell-integration-features = no-cursor
+shell-integration-features = ssh-env
+shell-integration-features = ssh-terminfo
+
+background-opacity = 0.95
+{{- $ghosttyBackground := joinPath .chezmoi.homeDir "Pictures/mac/assaultlily.jpg" }}
+{{- if stat $ghosttyBackground }}
+background-image = {{ $ghosttyBackground }}
+background-image-opacity = 1
+background-image-position = center
+background-image-fit = cover
+background-image-repeat = false
+{{- end }}
+
+font-family = HackGen Console NF
+font-family = Hack Nerd Font Mono
+font-feature = -calt
+font-feature = -liga
+font-feature = -dlig
+font-size = 14
+
+cursor-style = bar
+cursor-style-blink = false
+
+window-theme = dark
+window-width = 96
+window-height = 32
+window-padding-x = 8
+window-padding-y = 4
+window-padding-balance = true
+
+resize-overlay = never
+
+quit-after-last-window-closed = true
+
+macos-titlebar-proxy-icon = hidden
+
+auto-update = off
+
+keybind = ctrl+i=text:\t
+keybind = ctrl+m=text:\r

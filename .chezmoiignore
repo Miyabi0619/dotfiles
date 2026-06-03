@@ -13,7 +13,7 @@ packages/
 .claude/
 .config/gh/
 .config/starship.toml
-Library/
+Library/Application Support/Code/
 
 # macOS専用ファイル - Linux/Windowsでは無視
 {{ if ne .chezmoi.os "darwin" }}

@@ -50,6 +50,7 @@ make mise-install
 
 - manage: `.zshenv`, `.config/zsh/`, `.config/mise/`, `.config/sheldon/`, `.config/starship.toml`, `.gitconfig`
 - do not manage yet: `.bash_profile`, `.bashrc`, `.profile`, `~/.Brewfile`, `~/Library/Application Support/Code/User/settings.json`
+- Ghostty: app and downloadable fonts are installed by Homebrew; config is managed by chezmoi. If `~/Pictures/mac/assaultlily.jpg` exists, it is used as the Ghostty background image. Otherwise Ghostty uses its default background.
 
 VS Code settings や app-specific settings は変更頻度が高いため、必要になったら明示的に再採用します。
 
