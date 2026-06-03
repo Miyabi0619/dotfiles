@@ -1,4 +1,5 @@
 SHELL := /bin/sh
+NIX_FLAGS := --extra-experimental-features "nix-command flakes"
 
 .PHONY: bootstrap-ubuntu bootstrap-macos bootstrap-wsl bootstrap-windows chezmoi-dry chezmoi-apply mise-install nix-lock nix-switch nix-check
 
@@ -28,10 +29,10 @@ nix-switch:
 	if [ "$$(uname -s)" = "Darwin" ]; then fallback="$${USER}-darwin"; else fallback="$${USER}-linux"; fi; \
 	profile="$${HM_PROFILE:-$${host}}"; \
 	if ! grep -q "\"$${profile}\"" ./nix/flake.nix; then profile="$${fallback}"; fi; \
-	if command -v home-manager >/dev/null 2>&1; then home-manager switch --flake "./nix#$${profile}"; else nix run github:nix-community/home-manager -- switch --flake "./nix#$${profile}"; fi
+	if command -v home-manager >/dev/null 2>&1; then home-manager switch --flake "./nix#$${profile}"; else nix $(NIX_FLAGS) run github:nix-community/home-manager -- switch --flake "./nix#$${profile}"; fi
 
 nix-lock:
-	cd nix && nix flake lock
+	cd nix && nix $(NIX_FLAGS) flake lock
 
 nix-check:
-	nix flake check ./nix
+	nix $(NIX_FLAGS) flake check ./nix
